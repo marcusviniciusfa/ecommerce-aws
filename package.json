@@ -5,6 +5,7 @@
     "e_commerce_aws": "bin/e_commerce_aws.js"
   },
   "scripts": {
+    "deploy:all": "npm run lint && npm test && cdk deploy --all",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
@@ -45,6 +46,7 @@
   "dependencies": {
     "aws-cdk-lib": "2.53.0",
     "constructs": "^10.0.0",
+    "dotenv": "^16.0.3",
     "source-map-support": "^0.5.21"
   },
   "config": {

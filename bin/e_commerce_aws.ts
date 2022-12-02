@@ -1,18 +1,26 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
+import * as dotenv from 'dotenv';
 import 'source-map-support/register';
-import { ECommerceAwsStack } from '../lib/e_commerce_aws-stack';
+import { ENV, TAGS } from '../constants';
+import { ECommerceApiStack } from '../lib/e_commerce_api-stack';
+import { ProductsAppStack } from '../lib/products_app-stack';
+
+dotenv.config();
+
+// Observar relação de dependência entre as stacks
 
 const app = new cdk.App();
-new ECommerceAwsStack(app, 'ECommerceAwsStack', {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+
+const productsAppStack = new ProductsAppStack(app, 'ProductsApp', {
+  tags: { cost: TAGS.cost },
+  env: ENV
 });
+
+const eCommerceApiStack = new ECommerceApiStack(app, 'ECommerceApi', {
+  productFetchHandler: productsAppStack.getProductsFetchHandler(),
+  tags: { cost: TAGS.cost },
+  env: ENV
+});
+
+eCommerceApiStack.addDependency(productsAppStack);
