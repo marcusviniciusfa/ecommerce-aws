@@ -52,7 +52,7 @@ Unidade única para organizar e gerenciar recursos relacionados entre si.
 3. Stacks são criadas para gerenciar o processo de provisionamento dos recursos
 4. Recursos são criados sob Stacks
 
-![CloudFormation Process](cloudformation-process.png)
+![CloudFormation Process](./assets/cloudformation-process.png)
 
 ### AWS CDK (Cloud Development Kit)
 
@@ -60,7 +60,7 @@ Unidade única para organizar e gerenciar recursos relacionados entre si.
 * Modela recursos de infraestrutura utilizando linguagens de programação como: TypeScript, JavaScript, Python, Java e C#/.Net e Go, e transforma em modelos (templates) JSON/YAML
 * Utiliza bibliotecas públicas da AWS
 
-![App Stacks](app-stacks.png)
+![App Stacks](./assets/app-stacks.png)
 
 #### Comandos úteis
 
