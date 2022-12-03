@@ -5,6 +5,6 @@ export const ENV: cdk.Environment = {
   region: process.env.CDK_DEFAULT_REGION
 };
 
-export const TAGS = {
-  cost: 'ECommerce'
-};
+export enum Tags {
+  Cost = 'ECommerce'
+}
