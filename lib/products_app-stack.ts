@@ -36,8 +36,13 @@ export class ProductsAppStack extends cdk.Stack {
         minify: true,
         // Se os mapas de origem devem ser incluídos ao fazer o bundling
         sourceMap: false
+      },
+      environment: {
+        PRODUCTS_TABLE: this.productsTable.tableName // Captura o nome da tabela para dentro da função, utilizando uma variável de ambiente
       }
     });
+
+    this.productsTable.grantReadData(this.productsFetchHandler); // Aplica permissão de leitura para a função Lambda
   }
 
   public get useProductsFetchHandler(): lambdaNodeJS.NodejsFunction {
