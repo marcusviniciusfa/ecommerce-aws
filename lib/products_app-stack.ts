@@ -6,6 +6,7 @@ import { Construct } from 'constructs';
 
 export class ProductsAppStack extends cdk.Stack {
   private readonly productsFetchHandler: lambdaNodeJS.NodejsFunction;
+  private readonly productsAdminHandler: lambdaNodeJS.NodejsFunction;
   private readonly productsTable: dynamodb.Table;
 
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -27,7 +28,7 @@ export class ProductsAppStack extends cdk.Stack {
     this.productsFetchHandler = new lambdaNodeJS.NodejsFunction(this, 'ProductsFetchHandler', {
       runtime: lambda.Runtime.NODEJS_16_X,
       functionName: 'ProductsFetchHandler',
-      entry: 'lambda/products/productsFetchFunction.ts',
+      entry: 'lambda/products/productsFetchHandler.ts',
       handler: 'handler',
       memorySize: 128,
       timeout: cdk.Duration.seconds(5),
@@ -42,7 +43,25 @@ export class ProductsAppStack extends cdk.Stack {
       }
     });
 
-    this.productsTable.grantReadData(this.productsFetchHandler); // Aplica permissão de leitura para a função Lambda
+    this.productsTable.grantReadData(this.productsFetchHandler); // Aplica permissão de somente leitura para a função Lambda de busca de produtos
+
+    this.productsAdminHandler = new lambdaNodeJS.NodejsFunction(this, 'ProductsAdminHandler', {
+      runtime: lambda.Runtime.NODEJS_16_X,
+      functionName: 'ProductsAdminHandler',
+      entry: 'lambda/products/productsAdminHandler.ts',
+      handler: 'handler',
+      memorySize: 128,
+      timeout: cdk.Duration.seconds(5),
+      bundling: {
+        minify: true,
+        sourceMap: false
+      },
+      environment: {
+        PRODUCTS_TABLE: this.productsTable.tableName
+      }
+    });
+
+    this.productsTable.grantWriteData(this.productsAdminHandler); // Aplica permissão de somente escrita para a função Lambda de gerenciamento de produtos
   }
 
   public get useProductsFetchHandler(): lambdaNodeJS.NodejsFunction {
